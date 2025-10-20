@@ -6,7 +6,7 @@ for (let i = 1; i < 10; i = i + 1) {
   }
 }
 
-// i=i+1  可縮寫層 i+=1
+// i=i+1  可縮寫成 i+=1
 
 for (let i = 1; i < 6; i = i + 1) {
   console.log("*".repeat(i));
