@@ -1,5 +1,0 @@
-//可以設定Prettier的加分號 (semicolon)選項  為true或false，來決定是否在每行程式碼結尾加上分號。
-
-{
-  "semi": true
-}
