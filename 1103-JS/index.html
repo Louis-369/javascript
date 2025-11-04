@@ -37,8 +37,21 @@
     <main x-data="cs" class="px-6 todo-app main">
       <header>
         <nav class="navbar">
-          <a @click="gotoLogin" class="loginLink" href="#login">登入</a>
-          <a @click="gotoSignup" class="signUpLink" href="#sign_up">註冊</a>
+          <a
+            x-show="!isLogin"
+            @click="gotoLogin"
+            class="loginLink"
+            href="#login"
+            >登入</a
+          >
+          <a
+            x-show="!isLogin"
+            @click="gotoSignup"
+            class="signUpLink"
+            href="#sign_up"
+            >註冊</a
+          >
+          <a x-show="isLogin" @click="Logout" href="#">登出</a>
         </nav>
       </header>
 
@@ -52,6 +65,7 @@
               <label>
                 <h3>Email</h3>
                 <input
+                  x-model="email"
                   type="email"
                   id="loginEmail"
                   autocomplete="email"
@@ -65,6 +79,7 @@
               <label>
                 <h3>密碼</h3>
                 <input
+                  x-model="password"
                   type="password"
                   id="loginPassword"
                   autocomplete="current-password"
@@ -75,7 +90,7 @@
             </div>
 
             <div class="items-center justify-between block sm:flex field">
-              <button>登入</button>
+              <button @click.prevent="doLogIn">登入</button>
               <div class="text-xl text-gray-600">
                 還沒有帳號嗎？<a
                   @click="gotoSignup"
@@ -136,7 +151,7 @@
             </div>
 
             <div class="items-center justify-between block sm:flex field">
-              <button @click="doSignUp">註冊</button>
+              <button @click.prevent="doSignUp">註冊</button>
               <div class="text-xl text-gray-600">
                 已經有帳號了？<a
                   @click="gotoLogin"
@@ -175,120 +190,6 @@
             <label>
               <input type="checkbox" />
               <p class="content">我要學 Python</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li>
-          <div class="item-content">
-            <label>
-              <input type="checkbox" />
-              <p class="content">我要學 Ruby on Rails</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li class="completed">
-          <div class="item-content">
-            <label>
-              <input type="checkbox" checked />
-              <p class="content">我要學 Git</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li>
-          <div class="item-content">
-            <label>
-              <input type="checkbox" />
-              <p class="content">我要學 JavaScript</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li>
-          <div class="item-content">
-            <label>
-              <input type="checkbox" />
-              <p class="content">我要學 React</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li>
-          <div class="item-content">
-            <label>
-              <input type="checkbox" />
-              <p class="content">我要學 Vue</p>
-            </label>
-          </div>
-          <div class="item-control">
-            <a href="#" class="edit"
-              ><img class="icon" src="src/assets/pen-to-square-solid.svg"
-            /></a>
-            <a href="#" class="delete"
-              ><img class="icon" src="src/assets/trash-can-solid.svg"
-            /></a>
-          </div>
-        </li>
-        <!-- item end -->
-
-        <!-- item start -->
-        <li class="completed">
-          <div class="item-content">
-            <label>
-              <input type="checkbox" checked />
-              <p class="content">我要發大財</p>
             </label>
           </div>
           <div class="item-control">
