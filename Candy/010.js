@@ -11,6 +11,7 @@
 function expandedForm(num) {
   const result = [];
   const open = num.toString().split("");
+
   for (let i = 0; i < open.length; i++) {
     const current = open[i];
     const placeValue = 10 ** (open.length - i - 1); //次方
