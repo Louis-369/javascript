@@ -8,11 +8,8 @@
   </head>
   <body>
     <!-- 雙向綁定 -->
-    <div x-data="{message: ''}">
-      <input type="text" x-model.trim="message" />
-      <!-- <span x-text="message"></span> -->
-      <button :disabled="message == '' ">click</button>
-      <!-- trim() 方法會移除字串起始及結尾處的空白字元 -->
-    </div>
+    <form x-data action="/a.php">
+      <button @click.prevent="console.log('hello')">click</button>
+    </form>
   </body>
 </html>
