@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 function changeSection() {
   return {
@@ -11,42 +11,42 @@ function changeSection() {
     tasks: [],
 
     init() {
-      const token = localStorage.getItem("todoToken")
+      const token = localStorage.getItem("todoToken");
 
       if (token) {
-        this.isLogin = true
+        this.isLogin = true;
 
         // 抓 TODO
-        this.getTasks()
+        this.getTasks();
       }
 
       if (this.isLogin) {
-        this.gotoTask()
+        this.gotoTask();
       } else {
-        this.gotoSignUp()
+        this.gotoSignUp();
       }
     },
 
     async getTasks() {
-      const config = this.setConfig()
-      const resp = await axios.get("https://todoo.5xcamp.us/todos", config)
+      const config = this.setConfig();
+      const resp = await axios.get("https://todoo.5xcamp.us/todos", config);
 
-      this.tasks = resp.data.todos
+      this.tasks = resp.data.todos;
     },
 
     setConfig() {
-      const token = localStorage.getItem("todoToken")
+      const token = localStorage.getItem("todoToken");
       const config = {
         headers: {
           Authorization: token,
         },
-      }
+      };
 
-      return config
+      return config;
     },
 
     async doLogin() {
-      const { email, password } = this
+      const { email, password } = this;
 
       if (email != "" && password != "") {
         // API
@@ -55,26 +55,29 @@ function changeSection() {
             email,
             password,
           },
-        }
+        };
 
         try {
-          const resp = await axios.post("https://todoo.5xcamp.us/users/sign_in", userData)
-          const token = resp.headers.authorization
+          const resp = await axios.post(
+            "https://todoo.5xcamp.us/users/sign_in",
+            userData
+          );
+          const token = resp.headers.authorization;
 
           if (token) {
-            localStorage.setItem("todoToken", token)
-            this.isLogin = true
+            localStorage.setItem("todoToken", token);
+            this.isLogin = true;
           }
-          this.resetForm()
-          this.gotoTask()
+          this.resetForm();
+          this.gotoTask();
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       }
     },
 
     async doSignUp() {
-      const { email, nickname, password } = this
+      const { email, nickname, password } = this;
 
       if (email != "" && nickname != "" && password != "") {
         const userData = {
@@ -83,35 +86,49 @@ function changeSection() {
             nickname,
             password,
           },
-        }
+        };
 
         try {
-          await axios.post("https://todoo.5xcamp.us/users", userData)
-          this.resetForm()
-          this.gotoLogin()
+          await axios.post("https://todoo.5xcamp.us/users", userData);
+          this.resetForm();
+          this.gotoLogin();
         } catch (err) {
-          alert(err.response.data.message)
+          alert(err.response.data.message);
         }
       }
     },
 
     resetForm() {
-      this.email = ""
-      this.password = ""
-      this.nickname = ""
+      this.email = "";
+      this.password = "";
+      this.nickname = "";
+    },
+
+    async toggleTask(id) {
+      const idx = this.tasks.findIndex((t) => t.id === id);
+
+      if (idx >= 0) {
+        const resp = await axios.patch(
+          `https://todoo.5xcamp.us/todos/${id}/toggle`,
+          null,
+          this.setConfig()
+        );
+
+        console.log(resp);
+      }
     },
 
     deleteTask(id) {
       const idx = this.tasks.findIndex((t) => {
-        return t.id === id
-      })
+        return t.id === id;
+      });
 
       if (idx >= 0) {
         // 演！
-        this.tasks.splice(idx, 1)
+        this.tasks.splice(idx, 1);
 
         // 真
-        axios.delete(`https://todoo.5xcamp.us/todos/${id}`, this.setConfig())
+        axios.delete(`https://todoo.5xcamp.us/todos/${id}`, this.setConfig());
       }
     },
 
@@ -122,75 +139,87 @@ function changeSection() {
           todo: {
             content: this.taskName,
           },
-        }
+        };
 
-        const config = this.setConfig()
+        const config = this.setConfig();
 
         // 假戲
         const dummyTask = {
           id: crypto.randomUUID(),
           content: this.taskName,
           completed_at: null,
-        }
+        };
 
-        this.tasks.unshift(dummyTask)
+        this.tasks.unshift(dummyTask);
+
+        if (todo.completed_at) {
+          todo.completed_at = null;
+        } else {
+          todo.completed_at = new Date();
+        }
+        // 清除
+        this.taskName = "";
 
         // 真做
-        const resp = await axios.post("https://todoo.5xcamp.us/todos", todoData, config)
+        const resp = await axios.post(
+          "https://todoo.5xcamp.us/todos",
+          todoData,
+          config
+        );
 
         // 換
-        const newTask = resp.data
+        const newTask = resp.data;
         const idx = this.tasks.findIndex((t) => {
-          return t.id == dummyTask.id
-        })
-        this.tasks.splice(idx, 1, newTask)
-
-        // 清除
-        this.taskName = ""
+          return t.id == dummyTask.id;
+        });
+        this.tasks.splice(idx, 1, newTask);
       }
     },
 
     gotoLogin() {
-      this.change_section = "login"
+      this.change_section = "login";
     },
     gotoSignUp() {
-      this.change_section = "signup"
+      this.change_section = "signup";
     },
     gotoTask() {
-      this.change_section = "task"
+      this.change_section = "task";
     },
     showLogin() {
-      return this.change_section == "login"
+      return this.change_section == "login";
     },
     showSignUp() {
-      return this.change_section == "signup"
+      return this.change_section == "signup";
     },
     showTask() {
-      return this.change_section == "task"
+      return this.change_section == "task";
     },
     async Logout() {
       // API
-      const token = localStorage.getItem("todoToken")
+      const token = localStorage.getItem("todoToken");
 
       if (token) {
         const config = {
           headers: {
             Authorization: token,
           },
-        }
+        };
 
         try {
-          const resp = await axios.delete("https://todoo.5xcamp.us/users/sign_out", config)
+          const resp = await axios.delete(
+            "https://todoo.5xcamp.us/users/sign_out",
+            config
+          );
 
-          localStorage.removeItem("todoToken")
-          this.isLogin = false
-          this.gotoLogin()
+          localStorage.removeItem("todoToken");
+          this.isLogin = false;
+          this.gotoLogin();
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       }
     },
-  }
+  };
 }
 
-export { changeSection }
+export { changeSection };
