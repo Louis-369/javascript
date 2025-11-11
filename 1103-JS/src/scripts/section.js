@@ -1,4 +1,5 @@
 import axios from "axios";
+import { debounce } from "throttle-debounce";
 
 function changeSection() {
   return {
@@ -104,18 +105,38 @@ function changeSection() {
       this.nickname = "";
     },
 
-    async toggleTask(id) {
-      const idx = this.tasks.findIndex((t) => t.id === id);
+    toggleDebounce: debounce(1000, function (id, count) {
+      console.log(count);
 
-      if (idx >= 0) {
-        const resp = await axios.patch(
-          `https://todoo.5xcamp.us/todos/${id}/toggle`,
-          null,
-          this.setConfig()
-        );
-
-        console.log(resp);
+      if (count % 2 != 0) {
+        console.log("GO!");
       }
+
+      // axios.patch(`https://todoo.5xcamp.us/todos/${id}/toggle`, null, this.setConfig())
+    }),
+
+    async toggleTask(id) {
+      // 假戲
+      const todo = this.tasks.find((t) => {
+        return t.id == id;
+      });
+
+      if (todo.completed_at) {
+        // 已完成
+        todo.completed_at = null;
+      } else {
+        // 未完成
+        todo.completed_at = new Date();
+      }
+
+      if (todo.count == undefined) {
+        todo.count = 0;
+      }
+
+      todo.count = todo.count + 1;
+
+      // 真做
+      this.toggleDebounce(id, todo.count);
     },
 
     deleteTask(id) {
@@ -152,11 +173,6 @@ function changeSection() {
 
         this.tasks.unshift(dummyTask);
 
-        if (todo.completed_at) {
-          todo.completed_at = null;
-        } else {
-          todo.completed_at = new Date();
-        }
         // 清除
         this.taskName = "";
 
