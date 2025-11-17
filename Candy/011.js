@@ -12,7 +12,6 @@ function findOddElm(numbers) {
     count[num] = (count[num] || 0) + 1;
     //  元素賦予值          若無值則是0
   });
-
   for (let num in count) {
     // 遍歷物件(count)裡的元素（num），每個元素都有自己的value
     if (count[num] % 2 !== 0) {
