@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TODO App</title>
     <link rel="stylesheet" href="src/styles/style.css" />
-    <script src="src/scripts/todo.js" type="module"></script>
+    <script src="src/scripts/main.js" type="module"></script>
   </head>
 
   <body class="container px-2 py-4 mx-auto" x-data="cs">
@@ -183,16 +183,39 @@
           <li>
             <div class="item-content">
               <label>
-                <input type="checkbox" @click.prevent="toggleTask(t.id)" />
-                <p
-                  class="content"
-                  :class="(t.completed_at == null) ? '' : 'line-through text-gray-300'"
-                  x-text="t.content"
-                ></p>
+                <input
+                  x-show="!t.isEditing"
+                  type="checkbox"
+                  @click.prevent="toggleTask(t.id)"
+                />
+
+                <div class="flex">
+                  <p
+                    x-show="!t.isEditing"
+                    class="content"
+                    :class="(t.completed_at == null) ? '' : 'line-through text-gray-300'"
+                    x-text="t.content"
+                  ></p>
+
+                  <div x-show="t.isEditing">
+                    <input
+                      @keyup.enter="updateTodo(t.id)"
+                      type="text"
+                      class="border border-gray-400 p-3"
+                      x-model="taskValue"
+                    />
+                    <button
+                      @click.prevent="updateTodo(t.id)"
+                      class="bg-amber-400 px-5 py-3 cursor-pointer"
+                    >
+                      V
+                    </button>
+                  </div>
+                </div>
               </label>
             </div>
-            <div class="item-control">
-              <a href="#" class="edit"
+            <div class="item-control" x-show="!t.isEditing">
+              <a @click.prevent="toggleEdit(t.id)" href="#" class="edit"
                 ><img class="icon" src="src/assets/pen-to-square-solid.svg"
               /></a>
               <a @click.prevent="deleteTask(t.id)" href="#" class="delete"

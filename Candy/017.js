@@ -4,6 +4,8 @@
 // 範例：5 -> 101 -> 2 個 1
 
 function countBits(num) {
+  const carry = num.toString();
+  return (num.toString(2).match(/1/g) || []).length;
   // 實作寫在這裡
 }
 

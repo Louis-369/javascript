@@ -10,6 +10,7 @@ function changeSection() {
     isLogin: false,
     taskName: "",
     tasks: [],
+    taskValue: "",
 
     init() {
       const token = localStorage.getItem("todoToken");
@@ -46,6 +47,44 @@ function changeSection() {
       return config;
     },
 
+    updateTodo(id) {
+      const todo = this.tasks.find((t) => {
+        return t.id == id;
+      });
+
+      todo.isEditing = false;
+
+      // API
+      if (todo.content != this.taskValue) {
+        todo.content = this.taskValue;
+
+        const todoData = {
+          todo: {
+            content: this.taskValue,
+          },
+        };
+
+        axios.put(
+          `https://todoo.5xcamp.us/todos/${id}`,
+          todoData,
+          this.setConfig()
+        );
+      }
+    },
+
+    toggleEdit(id) {
+      this.tasks.forEach((t) => (t.isEditing = false));
+
+      const todo = this.tasks.find((t) => {
+        return t.id == id;
+      });
+
+      if (todo) {
+        this.taskValue = todo.content;
+        todo.isEditing = !todo.isEditing;
+      }
+    },
+
     async doLogin() {
       const { email, password } = this;
 
@@ -71,6 +110,9 @@ function changeSection() {
           }
           this.resetForm();
           this.gotoTask();
+
+          // 取得 tasks
+          this.getTasks();
         } catch (err) {
           console.log(err);
         }
@@ -105,14 +147,20 @@ function changeSection() {
       this.nickname = "";
     },
 
-    toggleDebounce: debounce(1000, function (id, count) {
-      console.log(count);
+    toggleDebounce: debounce(1000, function (id, todo) {
+      const { count } = todo;
+
+      // reset count
+      todo.count = 0;
 
       if (count % 2 != 0) {
-        console.log("GO!");
+        // 判斷奇數次 click
+        axios.patch(
+          `https://todoo.5xcamp.us/todos/${id}/toggle`,
+          null,
+          this.setConfig()
+        );
       }
-
-      // axios.patch(`https://todoo.5xcamp.us/todos/${id}/toggle`, null, this.setConfig())
     }),
 
     async toggleTask(id) {
@@ -136,7 +184,7 @@ function changeSection() {
       todo.count = todo.count + 1;
 
       // 真做
-      this.toggleDebounce(id, todo.count);
+      this.toggleDebounce(id, todo);
     },
 
     deleteTask(id) {
@@ -211,7 +259,6 @@ function changeSection() {
       return this.change_section == "task";
     },
     async Logout() {
-      // API
       const token = localStorage.getItem("todoToken");
 
       if (token) {
@@ -230,6 +277,9 @@ function changeSection() {
           localStorage.removeItem("todoToken");
           this.isLogin = false;
           this.gotoLogin();
+
+          // 清空
+          this.tasks = [];
         } catch (err) {
           console.log(err);
         }
